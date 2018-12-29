@@ -200,6 +200,19 @@ opts.Add("CXXFLAGS", "Custom flags for the C++ compiler")
 opts.Add("CFLAGS", "Custom flags for the C compiler")
 opts.Add("LINKFLAGS", "Custom flags for the linker")
 
+AddOption('--compile_commands',
+    help="Emit compilation database.",
+    action='store_true',
+    default=False,
+)
+
+if GetOption('compile_commands'):
+    env_base.Tool('compile_commands')
+    env_base.CompileCommands('build')
+    if BUILD_TARGETS and 'build/compile_commands.json' not in BUILD_TARGETS:
+        BUILD_TARGETS.append('build/compile_commands.json')
+
+
 # add platform specific options
 
 for k in platform_opts.keys():
