@@ -12,14 +12,14 @@ from SCons.Subst import SUBST_RAW
 
 def make_strfunction(strfunction):
     def _strfunction(target, source, env, **kwargs):
-        cmd = env.subst('$CXXCOM', SUBST_RAW, target, source)
+        cmd = env.subst('$CXXCOM', SUBST_RAW, target, source).replace("$(","").replace("$)", "")
         cwd = os.getcwd()
-        print(cmd)
-        env._compile_commands.append({
+        command_entry = {
             'directory' : cwd,
-            'command'   : cmd,
+            'arguments'   : cmd.split(),
             'file'      : source[0].rstr()
-            })
+        }
+        env._compile_commands.append(command_entry)
         return cmd
     return _strfunction
 
